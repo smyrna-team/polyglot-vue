@@ -1,11 +1,18 @@
 <script setup>
  import { ref } from 'vue'
+ import { useRoute } from 'vue-router'
+
  import { getWordLists } from '../api'
+
+ import WordList from '../components/WordList.vue'
+
+ const route = useRoute()
+
  const wordLists = ref([])
  const isLoading = ref(true)
 
  async function resolve() {
-   wordLists.value = await getWordLists(true)
+   wordLists.value = await getWordLists(true, { source: route.sourceLang, target: route.targetLang })
    isLoading.value = false
  }
  resolve()
@@ -14,15 +21,11 @@
 <template>
   <main>
     <h1>Word Lists</h1>
-    <h3 v-if='isLoading'>Loading</h3>
-    <ol v-else>
+    <h3 v-if="isLoading">Loading</h3>
+    <ul v-else>
       <li v-for="wordList in wordLists" v-bind:key="wordList.id">
-        <ul>
-          <li v-for="word in wordList.list" v-bind:key="word.id">
-            {{ word.name + ': ' + word.translation }}
-          </li>
-        </ul>
+          <WordList :name="wordList.name" :listLength="wordList.list.length" />
       </li>
-    </ol>
+    </ul>
   </main>
 </template>

@@ -27,45 +27,50 @@ async function request(file, method = 'get', value) {
   }
 }
 
-export async function getWotd(mock = false, lang = { source: 'en', target: 'tr' }) {
-  return mock ? {
-    id: 1,
-    lang: lang,
-    name: 'water',
-    translation: 'su'
-  } : await request('wotd')
+export async function getLangs(mock = false) {
+  return mock ? [
+    {
+      id: 1,
+      name: 'en'
+    },
+    {
+      id: 2,
+      name: 'tr'
+    }
+  ] : await request('lang')
 }
 
 export async function getWordLists(mock = false, lang = { source: 'en', target: 'tr' }) {
-  return mock ? [{
-    id: 1,
-    lang: lang,
-    list: [
-      {
-        id: 1,
-        name: 'water',
-        translation: 'su'
-      },
-      {
-        id: 2,
-        name: 'earth',
-        translation: 'toprak'
-      }
-    ]
-  }, {
-    id: 1,
-    lang: lang,
-    list: [
-      {
-        id: 1,
-        name: 'fire',
-        translation: 'od'
-      },
-      {
-        id: 2,
-        name: 'wood',
-        translation: 'odun'
-      }
-    ]
-  }] : await request('word-list')
+  return mock ? [
+    {
+      id: 1,
+      name: 'A1',
+      lang: lang,
+      list: [
+        {
+          name: 'water',
+          translation: 'su'
+        },
+        {
+          name: 'earth',
+          translation: 'toprak'
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'A2',
+      lang: lang,
+      list: [
+        {
+          name: 'fire',
+          translation: 'od'
+        },
+        {
+          name: 'wood',
+          translation: 'odun'
+        }
+      ]
+    }
+  ] : await request('word-list')
 }

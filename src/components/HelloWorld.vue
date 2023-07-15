@@ -1,14 +1,23 @@
 <script setup>
  import { ref } from 'vue'
- import { getWotd } from '../api'
- const isLoading = ref(true)
+ import { useRoute } from 'vue-router'
+
+ import { getWordLists } from '../api'
+
+ const route = useRoute()
+
+ const wordLists = ref([])
  const wotd = ref({})
+ const isLoading = ref(true)
 
  async function resolve() {
-     wotd.value = await getWotd(true)
+     wordLists.value = await getWordLists(true, { source: route.sourceLang, target: route.targetLang })
+     const wordList = wordLists.value[Math.floor(Math.random() * wordLists.value.length)]
+     wotd.value = wordList.list[Math.floor(Math.random() * wordList.list.length)]
      isLoading.value = false
  }
  resolve()
+
 </script>
 
 <template>

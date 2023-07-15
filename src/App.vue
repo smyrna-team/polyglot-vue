@@ -1,7 +1,33 @@
 <script setup>
- import { RouterLink, RouterView } from 'vue-router'
+ import { ref } from 'vue'
+ import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
  import HelloWorld from './components/HelloWorld.vue'
+ import { getLangs } from './api'
+
+ const route = useRoute()
+ const router = useRouter()
+
+ const langs = ref([])
+ const isLoading = ref(true)
+
+ async function resolve() {
+   langs.value = await getLangs(true)
+   isLoading.value = false
+ }
+ resolve()
+
+ function onLangChange() {
+   const sourceLang = document.getElementById('sourceLang')
+   const targetLang = document.getElementById('targetLang')
+   router.push({
+     query:  {
+       sourceLang: sourceLang.options[sourceLang.selectedIndex].value,
+       targetLang: targetLang.options[targetLang.selectedIndex].value
+     }
+   })
+ }
  </script>
+
 <template>
   <header>
     <img alt="logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
@@ -10,9 +36,15 @@
       <HelloWorld msg="Polyglot" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
+        <select id="sourceLang" @change="onLangChange">
+          <option v-for="lang in langs" v-bind:key="lang.id">{{  lang.name }}</option>
+        </select>
+<select id="targetLang" @change="onLangChange">
+          <option v-for="lang in langs" v-bind:key="lang.id">{{  lang.name }}</option>
+        </select>
+        <RouterLink :to="{ path: '/', query: route.query }">Home</RouterLink>
+        <RouterLink :to="{ path: '/about', query: route.query }">About</RouterLink>
+        <RouterLink :to="{ path: '/login', query: route.query }">Login</RouterLink>
       </nav>
     </div>
   </header>
