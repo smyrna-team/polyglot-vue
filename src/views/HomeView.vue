@@ -8,11 +8,11 @@
 
  const route = useRoute()
 
- const wordLists = ref([])
+ const wordLists = ref({})
  const isLoading = ref(true)
 
  async function resolve() {
-   wordLists.value = await getWordLists(true, { source: route.sourceLang, target: route.targetLang })
+   wordLists.value = await getWordLists(false, { source: route.sourceLang, target: route.targetLang })
    isLoading.value = false
  }
  resolve()
@@ -23,7 +23,7 @@
     <h1>Word Lists</h1>
     <h3 v-if="isLoading">Loading</h3>
     <ul v-else>
-      <li v-for="wordList in wordLists" v-bind:key="wordList.id">
+      <li v-for="wordList in wordLists.wordLists" v-bind:key="wordList.id">
           <WordList :name="wordList.name" :listLength="wordList.list.length" />
       </li>
     </ul>

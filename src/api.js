@@ -1,8 +1,7 @@
-const domain = 'http://localhost:8080/v1'
+const domain = 'api/v1/'
 
-function path(lang, file) {
-  const d = '/' // delimiter
-  return domain + d + lang.source + d + lang.target + d + file
+function path(file) {
+  return domain + file
 }
 
 async function request(file, method = 'get', value) {
@@ -11,33 +10,35 @@ async function request(file, method = 'get', value) {
     headers: {
       'Content-Type': 'application/json'
     }
-  };
-  console.log(value)
+  }
 
   if (value !== undefined) {
     options.body = JSON.stringify(value);
   }
   const response = await fetch(path(file), options);
+  return response.json()
 
   if (response.ok) {
-    const json = await response.json();
-    console.log(json);
+    return response.json()
   } else {
-    console.log(response.statusText);
+    console.log(response.statusText)
+    return {}
   }
 }
 
 export async function getLangs(mock = false) {
-  return mock ? [
-    {
-      id: 1,
-      name: 'en'
-    },
-    {
-      id: 2,
-      name: 'tr'
-    }
-  ] : await request('lang')
+  return mock ? {
+    langs: [
+      {
+        id: 1,
+        name: 'en'
+      },
+      {
+        id: 2,
+        name: 'tr'
+      }
+    ]
+  } : await request('lang')
 }
 
 export async function getWordLists(mock = false, lang = { source: 'en', target: 'tr' }) {
@@ -72,5 +73,5 @@ export async function getWordLists(mock = false, lang = { source: 'en', target: 
         }
       ]
     }
-  ] : await request('word-list')
+  ] : await request(lang.source + '/' + lang.target + '/' + 'word-list')
 }

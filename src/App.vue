@@ -7,11 +7,12 @@
  const route = useRoute()
  const router = useRouter()
 
- const langs = ref([])
+ const langs = ref({})
  const isLoading = ref(true)
 
  async function resolve() {
-   langs.value = await getLangs(true)
+   langs.value = await getLangs()
+     console.log(langs.value)
    isLoading.value = false
  }
  resolve()
@@ -37,10 +38,10 @@
 
       <nav>
         <select id="sourceLang" @change="onLangChange">
-          <option v-for="lang in langs" v-bind:key="lang.id">{{  lang.name }}</option>
+          <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
         </select>
 <select id="targetLang" @change="onLangChange">
-          <option v-for="lang in langs" v-bind:key="lang.id">{{  lang.name }}</option>
+          <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
         </select>
         <RouterLink :to="{ path: '/', query: route.query }">Home</RouterLink>
         <RouterLink :to="{ path: '/about', query: route.query }">About</RouterLink>
