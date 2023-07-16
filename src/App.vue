@@ -7,12 +7,18 @@
  const route = useRoute()
  const router = useRouter()
 
+ router.push({
+     query:  {
+         sourceLang: 'en',
+         targetLang: 'tr'
+     }
+ })
+
  const langs = ref({})
  const isLoading = ref(true)
 
  async function resolve() {
    langs.value = await getLangs()
-     console.log(langs.value)
    isLoading.value = false
  }
  resolve()

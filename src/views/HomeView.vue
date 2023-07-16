@@ -12,7 +12,7 @@
  const isLoading = ref(true)
 
  async function resolve() {
-   wordLists.value = await getWordLists(false, { source: route.sourceLang, target: route.targetLang })
+   wordLists.value = await getWordLists(false, { source: route.query.sourceLang, target: route.query.targetLang })
    isLoading.value = false
  }
  resolve()

@@ -1,5 +1,5 @@
 <script setup>
- import { ref } from 'vue'
+ import { ref, watchEffect } from 'vue'
  import { useRoute } from 'vue-router'
 
  import { getWordLists } from '../api'
@@ -10,14 +10,16 @@
  const wotd = ref({})
  const isLoading = ref(true)
 
- async function resolve() {
-     wordLists.value = await getWordLists(false, { source: route.sourceLang, target: route.targetLang })
-     const wordList = wordLists.value.wordLists[Math.floor(Math.random() * wordLists.value.length)]
-     wotd.value = wordList.list[Math.floor(Math.random() * wordList.list.length)]
-     isLoading.value = false
- }
- resolve()
-
+ watchEffect(() => {
+     async function resolve() {
+         console.log(route.query)
+         wordLists.value = await getWordLists(false, { source: route.query.sourceLang, target: route.query.targetLang })
+         const wordList = wordLists.value.wordLists[Math.floor(Math.random() * wordLists.value.wordLists.length)]
+         wotd.value = wordList.list[Math.floor(Math.random() * wordList.list.length)]
+         isLoading.value = false
+     }
+     resolve()
+ })
 </script>
 
 <template>
@@ -30,26 +32,26 @@
 </template>
 
 <style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
+ h1 {
+     font-weight: 500;
+     font-size: 2.6rem;
+     position: relative;
+     top: -10px;
+ }
 
-h3 {
-  font-size: 1.2rem;
-}
+ h3 {
+     font-size: 1.2rem;
+ }
 
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
+ .greetings h1,
+ .greetings h3 {
+     text-align: center;
+ }
 
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
+ @media (min-width: 1024px) {
+     .greetings h1,
+     .greetings h3 {
+         text-align: left;
+     }
+ }
 </style>
