@@ -67,7 +67,7 @@
       <li v-for="wordList in wordLists.wordLists" v-bind:key="wordList.id">
         <label>
             <input type="checkbox" v-model="selectedLists" :value="wordList" />
-             {{ wordList.name }} ({{ wordList.list.length }})
+             <WordList :listLength="wordList.name" :name="wordList.list.length" />
           </label>
       </li>
     </ul>
