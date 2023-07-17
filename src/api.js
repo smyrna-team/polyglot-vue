@@ -1,4 +1,4 @@
-const domain = 'api/v1/'
+const domain = '/api/v1/'
 
 function path(file) {
   return domain + file
@@ -19,7 +19,9 @@ async function request(file, method = 'get', value) {
   return response.ok ? response.json() : {}
 }
 
-export async function getLangs(mock = false) {
+const mock = false
+
+export async function getLangs() {
   return mock ? {
     langs: [
       {
@@ -34,7 +36,7 @@ export async function getLangs(mock = false) {
   } : await request('lang')
 }
 
-export async function getWordLists(mock = false, lang = { source: 'en', target: 'tr' }) {
+export async function getWordLists(lang = { source: 'en', target: 'tr' }) {
   return mock ? [
     {
       id: 1,
