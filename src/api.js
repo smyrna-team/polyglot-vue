@@ -16,14 +16,7 @@ async function request(file, method = 'get', value) {
     options.body = JSON.stringify(value);
   }
   const response = await fetch(path(file), options);
-  return response.json()
-
-  if (response.ok) {
-    return response.json()
-  } else {
-    console.log(response.statusText)
-    return {}
-  }
+  return response.ok ? response.json() : {}
 }
 
 export async function getLangs(mock = false) {
