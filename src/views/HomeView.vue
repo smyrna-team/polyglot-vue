@@ -18,7 +18,7 @@
   }
   resolve()
 
-  function readyQuiz(){
+  function startQuiz(){
     const selectedWords = []
     selectedLists.value.forEach(list => {
       selectedWords.push(...list.list)
@@ -32,8 +32,10 @@
     selectedWords.forEach(word => {
       const answers = []
       answers.push(word.translation)
+
       while (answers.length < 4) {
         const randomWord = selectedWords[Math.floor(Math.random() * selectedWords.length)]
+
         if (!answers.includes(randomWord.translation)) {
           answers.push(randomWord.translation)
         }
@@ -46,7 +48,6 @@
       })
       
     })
-    console.log(quiz)
   }
 
   function shuffle(array) {
@@ -66,11 +67,11 @@
     <ul v-else>
       <li v-for="wordList in wordLists.wordLists" v-bind:key="wordList.id">
         <label>
-            <input type="checkbox" v-model="selectedLists" :value="wordList" />
-             <WordList :listLength="wordList.name" :name="wordList.list.length" />
-          </label>
+          <input type="checkbox" v-model="selectedLists" :value="wordList" />
+          <WordList :listLength="wordList.name" :name="wordList.list.length" />
+          <button @click="startQuiz">Start Quiz</button>
+        </label>
       </li>
     </ul>
-    <button v-if="!isLoading" @click="readyQuiz">Ready to Quiz</button>
   </main>
 </template>
