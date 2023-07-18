@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   base: '/polyglot-vue/',
   plugins: [
-    vue(),
+    vue()
   ],
   resolve: {
     alias: {
