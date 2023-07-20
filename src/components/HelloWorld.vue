@@ -12,7 +12,7 @@
 
  watchEffect(() => {
      async function resolve() {
-         const value = await getWordLists({ source: route.query.sourceLang, target: route.query.targetLang })
+         const value = await getWordLists({ source: route.query.source, target: route.query.target })
          wordLists.value = value
          const wordList = value.wordLists[Math.floor(Math.random() * value.wordLists.length)]
          wotd.value = wordList.list[Math.floor(Math.random() * wordList.list.length)]

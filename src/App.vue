@@ -2,20 +2,21 @@
  import { ref } from 'vue'
  import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
  import HelloWorld from './components/HelloWorld.vue'
- import { getLangs } from './api'
+ import { getLangs, insertLang } from './api'
 
  const route = useRoute()
  const router = useRouter()
 
  router.push({
      query:  {
-         sourceLang: 'en',
-         targetLang: 'tr'
+         source: 'en',
+         target: 'tr'
      }
  })
 
  const langs = ref({})
  const isLoading = ref(true)
+ const langName = ref('')
 
  async function resolve() {
      langs.value = await getLangs()
@@ -24,14 +25,23 @@
  resolve()
 
  function onLangChange() {
-     const sourceLang = document.getElementById('sourceLang')
-     const targetLang = document.getElementById('targetLang')
+     const source = document.getElementById('source')
+     const target = document.getElementById('target')
+
+     if (source.options[source.selectedIndex].disabled || target.options[target.selectedIndex].disabled) {
+         return
+     }
      router.push({
          query:  {
-             sourceLang: sourceLang.options[sourceLang.selectedIndex].value,
-             targetLang: targetLang.options[targetLang.selectedIndex].value
+             source: source.options[source.selectedIndex].value,
+             target: target.options[target.selectedIndex].value
          }
      })
+ }
+
+ function insertLangOnClick() {
+     insertLang({ name: langName.value })
+     langName.value = ''
  }
 </script>
 
@@ -44,14 +54,16 @@
 
             <nav>
                 <form onsubmit="event.preventDefault()">
-                    <select @change="onLangChange" id="sourceLang" class="form-select" aria-label="Source Language Selection">
-                        <option disabled selected>Source Language</option>
+                    <select @change="onLangChange" id="source" class="form-select" aria-label="Source">
+                        <option disabled selected>Source</option>
                         <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
                     </select>
-                    <select @change="onLangChange" id="targetLang" class="form-select" aria-label="Target Language Selection">
-                        <option disabled selected>Target Language</option>
+                    <select @change="onLangChange" id="target" class="form-select" aria-label="Target">
+                        <option disabled selected>Target</option>
                         <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
                     </select>
+                    <input v-model="langName" placeholder="Code" />
+                    <button @click="insertLangOnClick" class="btn btn-success">+</button>
                 </form>
                 <RouterLink :to="{ path: '/', query: route.query }">Home</RouterLink>
                 <RouterLink :to="{ path: '/about', query: route.query }">About</RouterLink>

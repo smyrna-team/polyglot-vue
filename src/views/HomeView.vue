@@ -2,7 +2,7 @@
  import { ref } from 'vue'
  import { useRoute } from 'vue-router'
 
- import { getWordLists } from '../api'
+ import { getWordLists, insertWordList } from '../api'
 
  import WordList from '../components/WordList.vue'
 
@@ -17,12 +17,13 @@
  const isStarted = ref(false)
 
  async function resolve() {
-     wordLists.value = await getWordLists({ source: route.query.sourceLang, target: route.query.targetLang })
+     wordLists.value = await getWordLists({ source: route.query.source, target: route.query.target })
      isLoading.value = false
  }
  resolve()
 
  function start(){
+
      if (selectedLists.value.length == 0) {
          alert('Select at least one word list')
          return
