@@ -74,6 +74,12 @@
          array[j] = temp
      }
  }
+
+ function selectOption(event) {
+     if (event.target.value === questionss.value[question.value].answer) {
+         question.value++
+     }
+ }
 </script>
 
 <template>
@@ -86,8 +92,7 @@
                 <h3>{{ questionss[question].name }}</h3>
                 <div class="btn-group-vertical" role="group" aria-label="Options">
                     <template v-for="option in questionss[question].options" v-bind:key="option.id">
-                        <input name="option" :id="'option' + option.id" type="radio" class="btn-check" />
-
+                        <input :value="option.name" @change="selectOption" :id="'option' + option.id" name="option" type="radio" class="btn-check" />
                         <label :for="'option' + option.id" class="btn btn-outline-primary">{{ option.name }}</label>
                     </template>
                     <button @click="stop" class="btn btn-danger">X</button>
