@@ -1,48 +1,48 @@
 <script setup>
- import { ref } from 'vue'
- import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
- import HelloWorld from './components/HelloWorld.vue'
- import { getLangs, insertLang } from './api'
+    import { ref } from 'vue'
+    import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+    import HelloWorld from './components/HelloWorld.vue'
+    import { getLangs, insertLang } from './api'
 
- const route = useRoute()
- const router = useRouter()
+    const route = useRoute()
+    const router = useRouter()
 
- router.push({
-     query:  {
-         source: 'en',
-         target: 'tr'
-     }
- })
+    router.push({
+    query:  {
+    source: 'en',
+    target: 'tr'
+    }
+    })
 
- const langs = ref({})
- const isLoading = ref(true)
- const langName = ref('')
+    const langs = ref({})
+    const isLoading = ref(true)
+    const langName = ref('')
 
- async function resolve() {
-     langs.value = await getLangs()
-     isLoading.value = false
- }
- resolve()
+    async function resolve() {
+    langs.value = await getLangs()
+    isLoading.value = false
+    }
+    resolve()
 
- function onLangChange() {
-     const source = document.getElementById('source')
-     const target = document.getElementById('target')
+    function onLangChange() {
+    const source = document.getElementById('source')
+    const target = document.getElementById('target')
 
-     if (source.options[source.selectedIndex].disabled || target.options[target.selectedIndex].disabled) {
-         return
-     }
-     router.push({
-         query:  {
-             source: source.options[source.selectedIndex].value,
-             target: target.options[target.selectedIndex].value
-         }
-     })
- }
+    if (source.options[source.selectedIndex].disabled || target.options[target.selectedIndex].disabled) {
+    return
+    }
+    router.push({
+    query:  {
+    source: source.options[source.selectedIndex].value,
+    target: target.options[target.selectedIndex].value
+    }
+    })
+    }
 
- function insertLangOnClick() {
-     insertLang({ name: langName.value })
-     langName.value = ''
- }
+    function insertLangOnClick() {
+    insertLang({ name: langName.value })
+    langName.value = ''
+    }
 </script>
 
 <template>
@@ -54,16 +54,28 @@
 
             <nav>
                 <form onsubmit="event.preventDefault()">
-                    <select @change="onLangChange" id="source" class="form-select" aria-label="Source">
-                        <option disabled selected>Source</option>
-                        <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
-                    </select>
-                    <select @change="onLangChange" id="target" class="form-select" aria-label="Target">
-                        <option disabled selected>Target</option>
-                        <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
-                    </select>
-                    <input v-model="langName" placeholder="Code" />
-                    <button @click="insertLangOnClick" class="btn btn-success">+</button>
+                    <div class="row">
+                        <div class="col">
+                            <select @change="onLangChange" id="source" class="form-select" aria-label="Source">
+                                <option disabled selected>Source</option>
+                                <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select @change="onLangChange" id="target" class="form-select" aria-label="Target">
+                                <option disabled selected>Target</option>
+                                <option v-for="lang in langs.langs" v-bind:key="lang.id">{{  lang.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input v-model="langName" placeholder="Code" class="form-control" />
+                        </div>
+                        <div class="col">
+                            <button @click="insertLangOnClick" class="btn btn-success">+</button>
+                        </div>
+                    </div>
                 </form>
                 <RouterLink :to="{ path: '/', query: route.query }">Home</RouterLink>
                 <RouterLink :to="{ path: '/about', query: route.query }">About</RouterLink>
