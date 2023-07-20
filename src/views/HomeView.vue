@@ -22,7 +22,7 @@
  }
  resolve()
 
- function startQuiz(){
+ function start(){
      if (selectedLists.value.length == 0) {
          alert('Select at least one word list')
          return
@@ -59,7 +59,7 @@
      isStarted.value = true
  }
 
- function stopQuiz() {
+ function stop() {
      questionss.value = []
      question.value = 0
      isStarted.value = false
@@ -77,29 +77,32 @@
 
 <template>
     <main>
-        <h1>Word Lists</h1>
-        <h3 v-if="isLoading">Loading</h3>
+        <h1>Home</h1>
+        <h2 v-if="isLoading">Loading</h2>
         <section v-else>
-            <div v-if="isStarted">
-                <h2>{{ questionss[question].name }}</h2>
+            <h2>Word Lists</h2>
+            <template v-if="isStarted">
+                <h3>{{ questionss[question].name }}</h3>
                 <div class="btn-group-vertical" role="group" aria-label="Options">
-                    <label v-for="option in questionss[question].options" v-bind:key="option.id" class="btn btn-outline-primary">
-                        <input type="radio" class="btn-check" />
-                        {{ option.name }}
-                    </label>
-                    <button @click="stopQuiz" class="btn btn-danger">X</button>
+                    <template v-for="option in questionss[question].options" v-bind:key="option.id">
+                        <input name="option" :id="'option' + option.id" type="radio" class="btn-check" />
 
+                        <label :for="'option' + option.id" class="btn btn-outline-primary">{{ option.name }}</label>
+                    </template>
+                    <button @click="stop" class="btn btn-danger">X</button>
                 </div>
-            </div>
-            <div v-else>
+            </template>
+            <template v-else>
                 <div class="btn-group-vertical" role="group" aria-label="Word Lists">
-                    <label v-for="wordList in wordLists.wordLists" v-bind:key="wordList.id" class="btn btn-outline-primary">
-                        <input v-model="selectedLists" :value="wordList" type="checkbox" class="btn-check" />
-                        <WordList :name="wordList.name" :listLength="wordList.list.length" />
-                    </label>
-                    <button @click="startQuiz" class="btn btn-success">></button>
+                    <template v-for="wordList in wordLists.wordLists" v-bind:key="wordList.id">
+                        <input :id="'wordList' + wordList.id" v-model="selectedLists" :value="wordList" type="checkbox" class="btn-check" />
+                        <label :for="'wordList' + wordList.id" class="btn btn-outline-primary">
+                            <WordList :name="wordList.name" :listLength="wordList.list.length" />
+                        </label>
+                    </template>
+                    <button @click="start" class="btn btn-success">></button>
                 </div>
-            </div>
+            </template>
         </section>
     </main>
 </template>
