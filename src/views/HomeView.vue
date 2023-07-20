@@ -2,7 +2,7 @@
  import { ref } from 'vue'
  import { useRoute } from 'vue-router'
 
- import { getWordLists, insertWordList } from '../api'
+ import { getWordLists } from '../api'
 
  import WordList from '../components/WordList.vue'
 
@@ -23,11 +23,11 @@
  resolve()
 
  function start(){
-
      if (selectedLists.value.length == 0) {
          alert('Select at least one word list')
          return
      }
+
      const selectedWords = []
      selectedLists.value.forEach(list => {
          selectedWords.push(...list.list)
