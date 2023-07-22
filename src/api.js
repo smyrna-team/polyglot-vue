@@ -365,7 +365,6 @@ const wordLists = {
 export async function getWordLists (lang = { source: 'en', target: 'tr' }) {
   const filteredWordLists = { wordLists }
   filteredWordLists.wordLists = wordLists.wordLists.filter((wordList) => wordList.lang.source === lang.source && wordList.lang.target === lang.target)
-  console.log(filteredWordLists)
   return mock ? filteredWordLists : await request('word-list?source=' + lang.source + '&target=' + lang.target)
 }
 

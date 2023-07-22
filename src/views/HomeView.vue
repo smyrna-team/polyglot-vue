@@ -2,13 +2,21 @@
  import { ref } from 'vue'
  import { useRoute } from 'vue-router'
 
- import { getWordLists } from '../api'
+ import { getWordLists, insertWordList } from '../api'
 
  import WordList from '../components/WordList.vue'
 
  const route = useRoute()
 
- const wordLists = ref({})
+ const wordLists = ref({ wordLists: [] })
+ const wordList = ref({
+     name: '',
+     lang: {
+         source: '',
+         target: ''
+     },
+     list: []
+ })
  const isLoading = ref(true)
  const selectedLists = ref([])
 
@@ -21,6 +29,15 @@
      isLoading.value = false
  }
  resolve()
+
+ async function onInsertWordList() {
+     wordList.value.lang = {
+         source: route.query.source,
+         target: route.query.target
+     }
+     const insertedWordList = { id: await insertWordList({ ...wordList.value }), ...wordList.value }
+     wordLists.value.wordLists.push(insertedWordList)
+ }
 
  function start(){
      if (selectedLists.value.length == 0) {
@@ -75,8 +92,9 @@
      }
  }
 
- function selectOption(event) {
+ function onSelectOption(event) {
      if (event.target.value === questionss.value[question.value].answer) {
+         event.target.checked = false
          question.value++
      }
  }
@@ -88,17 +106,17 @@
         <h2 v-if="isLoading">Loading</h2>
         <section v-else>
             <h2>Word Lists</h2>
-            <template v-if="isStarted">
+            <div v-if="isStarted">
                 <h3>{{ questionss[question].name }}</h3>
                 <div class="btn-group-vertical" role="group" aria-label="Options">
                     <template v-for="option in questionss[question].options" v-bind:key="option.id">
-                        <input :value="option.name" @change="selectOption" :id="'option' + option.id" name="option" type="radio" class="btn-check" />
+                        <input :value="option.name" @change="onSelectOption" :id="'option' + option.id" name="option" type="radio" class="btn-check" />
                         <label :for="'option' + option.id" class="btn btn-outline-primary">{{ option.name }}</label>
                     </template>
                     <button @click="stop" class="btn btn-danger">X</button>
                 </div>
-            </template>
-            <template v-else>
+            </div>
+            <div v-else>
                 <div class="btn-group-vertical" role="group" aria-label="Word Lists">
                     <template v-for="wordList in wordLists.wordLists" v-bind:key="wordList.id">
                         <input :id="'wordList' + wordList.id" v-model="selectedLists" :value="wordList" type="checkbox" class="btn-check" />
@@ -106,9 +124,11 @@
                             <WordList :name="wordList.name" :listLength="wordList.list.length" />
                         </label>
                     </template>
-                    <button @click="start" class="btn btn-success">></button>
+                            <input v-model="wordList.name" placeholder="Name" class="form-control"/>
+                            <button @click="onInsertWordList" class="btn btn-success">+</button>
+                    <button @click="start" class="btn btn-primary">></button>
                 </div>
-            </template>
+            </div>
         </section>
     </main>
 </template>
